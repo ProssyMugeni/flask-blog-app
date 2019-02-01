@@ -1,21 +1,22 @@
-from flask import Flask, render_template, url_for, flash, redirect
-from forms import RegistrationForm, LoginForm
-app = Flask(__name__)
+from flask import render_template, url_for, flash, redirect
+from Blog import app
 
-app.config['SECRET_KEY'] = '331b18148aa17853e21030ef28ec6b5e'
+from Blog.forms import RegistrationForm, LoginForm
+from Blog.models import User, Post
+
 
 posts = [
     {
-        'title': 'my blog post 1',
-        'author': 'Prossie Neville',
-        'content': 'city pastor nabbed with fake passports',
-        'date': 'January 25 2019'
+        'author': 'Corey Schafer',
+        'title': 'Blog Post 1',
+        'content': 'First post content',
+        'date_posted': 'April 20, 2018'
     },
     {
-        'title': 'my blog post 2',
-        'author': 'Prossie Neville',
-        'content': 'city pastor nabbed with fake passports',
-        'date': 'January 25 2019'
+        'author': 'Jane Doe',
+        'title': 'Blog Post 2',
+        'content': 'Second post content',
+        'date_posted': 'April 21, 2018'
     }
 ]
 
@@ -28,7 +29,7 @@ def home():
 
 @app.route("/about")
 def about():
-    return render_template('about.html')
+    return render_template('about.html', title='About')
 
 
 @app.route("/register", methods=['GET', 'POST'])
@@ -47,8 +48,6 @@ def login():
         if form.email.data == 'admin@blog.com' and form.password.data == 'password':
             flash('You have been logged in!', 'success')
             return redirect(url_for('home'))
+        else:
+            flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('login.html', title='Login', form=form)
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
